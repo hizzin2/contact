@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Title of the document</title>
+<style>
+table { border-collapse: collapse;}
+table td { width: 15%; border: 1px solid #333 ; }
+</style>
+</head>
+<body>
+	<h2>알서포트 직원명단 테스트</h2>
+	<table id="container" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr><td>본부</td><td>팀</td><td>이름</td><td>직급</td><td>직책</td><td>전화번호</td><td>이메일</td></tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var $getData = null
+			, $managementSupport = []
+			, $researchDevelopment = [];
+		$.ajax({
+			type:'GET',
+			url: './rsupport_hr.json',
+			dataType: 'json',
+			success: function(data) {	
+				$getData = data; 
+				renderPage();
+				sortData();
+				console.log($managementSupport);
+				console.log($researchDevelopment);
+			},
+			error: function(xhr, status, error) {
+				alert('통신장애');
+			}
+		});
+
+		function renderPage() {
+			var $contentList = '';
+			for(var i = 0, len = $getData.length; i < len; i++ ) {
+				$contentList += '<tr><td>' + $getData[i].headOffice + '</td><td>' + $getData[i].team + '</td><td>' + $getData[i].name + '</td><td>' + $getData[i].position + '</td><td>' + $getData[i].job + '</td><td>' + $getData[i].tel + '</td><td>' + $getData[i].email +' </td></tr>';
+			}
+			$('#container tbody').append($contentList);
+		}
+
+		function sortData() {
+			for(i in $getData) {
+				switch($getData[i].headOffice) {
+					case "경영지원본부" :
+						$managementSupport.push($getData[i]);
+						break;
+					case "연구개발본부" :
+						$researchDevelopment.push($getData[i]);
+						break;
+				}
+			}
+		}
+
+	});
+</script>
+</body>
+</html>
